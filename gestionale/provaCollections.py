@@ -1,6 +1,11 @@
 import copy
+from collections import Counter
+from encodings.rot_13 import rot13_map
 
+from gestionale.core.clienti import ClienteRecord
 from gestionale.core.prodotti import ProdottoRecord
+from gestionale.vendite.ordini import Ordine
+
 #creo singoli prodotti e li aggiungo a una lista
 p1 = ProdottoRecord("Laptop", 1200.0)
 p2 = ProdottoRecord("Mouse", 20.0)
@@ -132,3 +137,138 @@ s1.issuperset(s) # se gli elementi di s sono contenuti in s1
 s1.isdisjoint(s) # se gli elementi di s e quelli di s1 sono diversi
 
 #Dictionary
+catalogo = {
+    "LAP001" : ProdottoRecord("Laptop", 1200.0)
+    "LAP002" : ProdottoRecord("Laptop Pro", 2300.0)
+    "MAU001" : ProdottoRecord("Mouse", 20.0)
+    "AUR001" : ProdottoRecord("Auricolari", 250.0)
+}
+
+cod = "LAP002"
+prod = catalogo[cod]
+
+print(f"Il prodotto con codice {cod} è {prod}")
+
+prod1 = catalogo.get("Non esiste")
+
+if prod1 is None:
+    print("Prodotto non trovato")
+
+prod2 = catalogo.get("Non esiste2", ProdottoRecord("Sconosciuto", 0))
+print(prod2)
+
+keys = list(catalogo.keys())
+values = list(catalogo.values())
+
+for k in keys:
+    print(k)
+
+for v in values:
+    print(v)
+
+for key, val in catalogo.items():
+    print(f"Cod {key} è associata a: {val}")
+
+rimosso = catalogo.pop("LAP002")
+print(rimosso)
+
+#dict comprehesion
+prezzi = {codice: prezzo_unitario for codice, prod in catalogo.items()}
+
+# DA RICORDARE PER DICT
+# v = d[key] # per leggere
+# d[key] = v # scrivo sul dizionario
+# v = d.get(key, default) # legge senza rischiare keyError
+# d.pop(key) # restituisce un valore e lo cancella nel diz
+# d.clear() # elimino tutto
+# d.keys() # mi restituisce tutte le chiavi salvate nel diz
+# d.values() # mi restituisce tutti i valori salvati nel diz
+# d.items() # restituisce le coppie
+# key in d # condizione che verifica se key è presente nel diz
+
+
+"""" ESERCIZIO LIVE """
+""" Per ciascuno dei seguenti casi, decidere quale struttura usare: """
+""" 1-Memorizzare un elenco di ordini che dovranno poi essere processati in ordine di arrivo """
+    # Collection? ----> Utilizzo una lista
+
+    ordini = []
+    o1 = Ordine([], ClienteRecord("Mario Rossi","mariorossi@gmail.com", "Gold"))
+    o2 = Ordine([], ClienteRecord("Luigi Verdi","luigiverdi@gmail.com", "Bronze"))
+    o3 = Ordine([], ClienteRecord("Mrco Blu", "marcoblu@gmail.com", "Bronze"))
+
+    ordini.append(o1,0)
+    ordini.append(o2, 10)
+    ordini.append(o3, 14)
+
+""" 2-Memorizzare i CF dei clienti (univoco) """
+    # Collection?
+    codici_fiscali = {"abc123", "cdf456", "kbk567"}
+    print(codici_fiscali)
+
+""" 3-Creare un database di prodotti che posso cercare con un codice univoco """
+    # Collection?
+    listino_prodotti = {"LAP001" : ProdottoRecord("Laptop", 1200.0)
+                        "LAP002" : ProdottoRecord("Laptop Pro", 2300.0)}
+
+""" 4-Memorizzare le coordinate gps della nuova sede di Roma """
+    # Collection?
+    magazzino_roma = (45,6)
+
+""" 5-Tenere traccia delle categorie di clienti che hanno fatto un ordine in un certo range temporale """
+    # Collection?
+    categorie_periodo = set()
+    categorie_periodo.add("Gold")
+    categorie_periodo.add("Bronze")
+
+
+print("===================================================================")
+
+
+# COUNTER
+lista_clienti = {
+    ClienteRecord("Mario Rossi","mariorossi@gmail.com", "Gold"))
+    ClienteRecord("luigi Verdi","luigiverdi@gmail.com", "Silver"))
+    ClienteRecord("Flavia Bianchi","flaviabianchi@gmail.com", "Gold"))
+    ClienteRecord("Maria Ru","mariablu@gmail.com", "Bronze"))
+    ClienteRecord("Piero Blu","pieroblu@gmail.com", "Silver"))
+}
+
+categorie = [c.categorie for c in lista_clienti]
+categorie_counter = Counter(categorie)
+
+print("Distribuzione categorie clienti")
+print(categorie_counter)
+
+print("Categoria più frequente")
+print(categorie_counter.most_common(1))
+
+# quanti elementi ho nella lista
+print("Totale: ")
+print(categorie_counter.total())
+
+vendite_gennaio = Counter(
+    {"Laptop":13, "Tablet": 15}
+)
+
+vendite_febbraio = Counter(
+    {"Laptop":3, "Stampante": 5}
+)
+
+vendite_bimestre = vendite_gennaio + vendite_febbraio
+
+print(f"Vendite Gennaio: {vendite_gennaio}")
+print(f"Vendite Febbraio: {vendite_febbraio}")
+print(f"Vendite Bimestre: {vendite_bimestre}")
+
+# fare la differenza
+print(f"Differenza di vendite: {vendite_gennaio - vendite_febbraio}")
+
+# modificre i valori in fly
+
+vendite_gennaio["Laptop"] += 4
+print(f"Vendite Gennaio: {vendite_gennaio}")
+
+# METODI DA RICORDARE
+c.most_common(n) # restituisce gli n elementi più frequentu
+c.total() # somma dei conteggi
