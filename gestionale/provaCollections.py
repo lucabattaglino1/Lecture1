@@ -16,12 +16,12 @@ carrello =[p1, p2, p3, ProdottoRecord("Tablet", 700.0)]
 #stampo i prodotti nome e prezzo
 print("Prodotti nel carrello:")
 for i, p in enumerate(carrello):
-    print(f"{i}) {p.name} - {p.prezzo_unitario}")
+    print(f"{i}) {p.name} - {p.prezzo_unitario}") # mi stampa tipo 1) Mouse - 20.0
 
 #aggiungo a una lista un nuovo prodotto
 carrello.append(ProdottoRecord("Monitor", 150.0))
 
-#ordino la listaper prezzo decrescente
+#ordino la lista per prezzo decrescente
 carrello.sort(key = lambda x: x.prezzo_unitario, reverse=True)
 
 #stampo i prodotti nome e prezzo
@@ -32,6 +32,10 @@ for i, p in enumerate(carrello):
 #faccio la somma di tutti i prodotti nella lista e li vado a stampare
 tot = sum(p.prezzo_unitario for p in carrello)
 print(f"Totale del carrello: {tot}")
+#equivalente di
+# tot = 0
+# for p in carrello:
+#    tot += p.prezzo_unitario
 
 # AGGIUNGERE
 #aggiungo un nuovo prodotto
@@ -58,7 +62,7 @@ carrello.reverse() # inverte l'ordine
 carrello_copia = carrello.copy() # crea una copia della lista (se modifico la prima, modifico anche questa)
 carrello_copia2 = copy.deepcopy(carrello) # copio anche il contenuto qui (se modifico la prima, non modifico anche questa)
 
-# TUPLE (immutabili)
+# TUPLE ( liste immutabili)
 sede_principale = (45, 8) #lat e long della sede di torino
 sede_milano = (45, 9) #lat e long della sede di milano
 #stampo queste tuple
@@ -86,7 +90,7 @@ tot, media, max, min = calcola_statistiche_carrello(carrello)
 tot, *altri_campi = calcola_statistiche_carrello(carrello)
 print(tot)
 
-#SET
+#SET (è un insieme senza duplicati)
 categorie = {"Gold", "Silver", "Bronze", "Gold"}
 print(categorie) #stampa solo i primi 3 perchè diversi
 print(len(categorie)) #calcola la dimensione (3)
@@ -101,7 +105,7 @@ print(categorie_comuni)
 categorie_esclusive = categorie - categorie2 #solo gli elementi presenti in uno dei due set
 print(categorie_esclusive)
 
-categorie_esclusive_symm = categorie ^ categorie2 # differenza simmetrica
+categorie_esclusive_symm = categorie ^ categorie2 # differenza simmetrica(elementi diversi dei due)
 print(categorie_esclusive_symm)
 
 prodotti_ordine_A = {ProdottoRecord("Laptop", 1200),
@@ -157,6 +161,7 @@ if prod1 is None:
 prod2 = catalogo.get("Non esiste2", ProdottoRecord("Sconosciuto", 0))
 print(prod2)
 
+# Iterare su dictionary
 keys = list(catalogo.keys())
 values = list(catalogo.values())
 
@@ -225,7 +230,7 @@ prezzi = {codice: prezzo_unitario for codice, prod in catalogo.items()}
 print("===================================================================")
 
 
-# COUNTER
+# COUNTER (serve per contare occorrenze)
 lista_clienti = {
     ClienteRecord("Mario Rossi","mariorossi@gmail.com", "Gold"))
     ClienteRecord("luigi Verdi","luigiverdi@gmail.com", "Silver"))
@@ -235,13 +240,13 @@ lista_clienti = {
 }
 
 categorie = [c.categorie for c in lista_clienti]
-categorie_counter = Counter(categorie)
+categorie_counter = Counter(categorie) # conta il numero di gold, il numero di silver...
 
 print("Distribuzione categorie clienti")
 print(categorie_counter)
 
 print("Categoria più frequente")
-print(categorie_counter.most_common(1))
+print(categorie_counter.most_common(1)) # troviamo la categoria più frequente
 
 # quanti elementi ho nella lista
 print("Totale: ")
@@ -264,11 +269,11 @@ print(f"Vendite Bimestre: {vendite_bimestre}")
 # fare la differenza
 print(f"Differenza di vendite: {vendite_gennaio - vendite_febbraio}")
 
-# modificre i valori in fly
+# modificare i valori in fly
 
 vendite_gennaio["Laptop"] += 4
 print(f"Vendite Gennaio: {vendite_gennaio}")
 
 # METODI DA RICORDARE
-c.most_common(n) # restituisce gli n elementi più frequentu
+c.most_common(n) # restituisce gli n elementi più frequenti
 c.total() # somma dei conteggi
