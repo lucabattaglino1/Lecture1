@@ -4,7 +4,7 @@ from encodings.rot_13 import rot13_map
 
 from gestionale.core.clienti import ClienteRecord
 from gestionale.core.prodotti import ProdottoRecord
-from gestionale.vendite.ordini import Ordine
+from gestionale.vendite.ordini import Ordine, RigaOrdine
 
 #creo singoli prodotti e li aggiungo a una lista
 p1 = ProdottoRecord("Laptop", 1200.0)
@@ -275,5 +275,17 @@ vendite_gennaio["Laptop"] += 4
 print(f"Vendite Gennaio: {vendite_gennaio}")
 
 # METODI DA RICORDARE
-c.most_common(n) # restituisce gli n elementi più frequenti
-c.total() # somma dei conteggi
+#c.most_common(n) # restituisce gli n elementi più frequenti
+#c.total() # somma dei conteggi
+
+# DEQUE
+coda_ordini = deque()
+for i in range(1,10):
+    cliente = ClienteRecord(f"Cliente {i}@polito.it","Gold")
+    prodotto = ProdottoRecord(f"Prodotto {i}", 100.0*i)
+    ordine = Ordine([RigaOrdine(prodotto,1)], cliente)
+    coda_ordini.append(ordine)
+
+while coda_ordini:
+    ordine_corrente = coda_ordini.popleft()
+    print(f"Sto gestendo l'ordine del cliente {ordine_corrente.cliente}")
