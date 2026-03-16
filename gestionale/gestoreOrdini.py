@@ -13,11 +13,13 @@ from gestionale.vendite.ordini import Ordine
 
 
 class GestoreOrdini:
+    # costruttore
     def __init__(self):
-        self._ordini_da_processare = deque()
-        self._ordini_processati = []
-        self._statistiche_prodotti = Counter()
-        self._ordini_per_categoria = defaultdict()
+        self._ordini_da_processare = deque() # qui viene creata la coda di ordini
+        self._ordini_processati = [] # lista per archiviare ordini processati
+        self._statistiche_prodotti = Counter() # dizionario speciale per contare quanti prodotti sono stati venduti
+        self._ordini_per_categoria = defaultdict() # dizionario che crea automaticamente un valore di default
+        # serve per raggruppare gli ordini per categoria cliente
 
     def add_ordine(self, ordine: Ordine):
         # aggiunge un nuovo ordine agli elementi da gestire
@@ -31,10 +33,10 @@ class GestoreOrdini:
         # assicuriamoci che l'ordine da processare esista
         if not self._ordini_da_processare:
             print("Non vi sono ordini da processare")
-            return False
+            return False #interrompo il metodo
 
         # se esiste, gestiamo il primo in coda
-        ordine = self._ordini_da_processare.popleft() #logica FIFO
+        ordine = self._ordini_da_processare.popleft() #logica FIFO, processo il primo ordine
 
         print(f"Sto processando l'ordine di {ordine.cliente}")
         print(ordine.riepilogo())
@@ -48,7 +50,7 @@ class GestoreOrdini:
         # raggruppare gli ordini per categoria
         self._ordini_per_categoria[ordine.cliente.categoria].append(ordine)
 
-        # archivio l'ordine
+        # archivio l'ordine nella lista creata
         self._ordini_processati.append(ordine)
 
         print("Ordine correttamante processato")
@@ -58,6 +60,7 @@ class GestoreOrdini:
         # processa tutti gli ordini attualmente presenti in coda
         print(f"Processando {len(self._ordini_da_processare)} ordini")
 
+        # finchè la coda non è vuota processa ordini chiamando il metodo precedente
         while self._ordini_da_processare:
             self.processa_prossimo_ordine()
         print("Tutti gli ordini sono stati processati")
@@ -75,28 +78,32 @@ class GestoreOrdini:
 
         # restituisce info su totale fatturato per ogni categoria presente
         valori = []
-        for cat in self._ordini_per_categoria.keys():
-            ordini = self._ordini_per_categoria[cat]
+        for cat in self._ordini_per_categoria.keys(): # scorre tutte le categorie
+            ordini = self._ordini_per_categoria[cat] # prendo la lista di ordini per la categoria
+            # sommo il totale lordo degli ordini
             totale_Fatturato = sum( [o.ordini.totale_lordo(0.22) for o in ordini] )
             valori.append(cat, totale_Fatturato)
         return valori
 
     def stampa_riepilogo(self):
+        # vado a stampare lo stato del sistema
         print("Stato attuale del business: ")
-        print(f"Ordini correttamente gestiti: {len(self._ordini_processati)}")
-        print(f"Ordini in coda: {len(self._ordini_da_processare)}")
+        print(f"Ordini correttamente gestiti: {len(self._ordini_processati)}") # numero ordini processati
+        print(f"Ordini in coda: {len(self._ordini_da_processare)}") # numero ordini in coda
 
-        print("Prodotti più venduti: ")
+        print("Prodotti più venduti: ") # stampo i prodotti più venduti
         for prod, quantita in self.get_statistiche_prodotti():
             print(f"{prod}: {quantita}")
 
-        print(f"Fatturato per categoria: ")
+        print(f"Fatturato per categoria: ") # stampa il fatturato per categoria
         for cat, fatturato in self.get_distribuzione_categorie():
             print(f"{cat}: {fatturato}")
 
+# serve per testare il sistema e vedere se tutti i metodi creati funzionano in una lista di ordini
 def test_modulo():
-    sistema = GestoreOrdini()
+    sistema = GestoreOrdini() # creo il sistema
 
+    # creo la lista di ordini
     ordini = [
         Ordine([Rigaordine(ProdottoRecord("Laptop",1200.0),1),
                 Rigaordine(ProdottoRecord("Mouse", 10.0), 3)
@@ -122,12 +129,17 @@ def test_modulo():
                 ], ClienteRecord("Federica Blu", "federica@mail.it", "Gold"))
     ]
 
+    # aggiungo ordini
     for o in ordini:
         sistema.add_ordine(o)
 
+    # processo tutti gli ordini
     sistema.processa_tutti_ordini()
+
+    # stampo le statistiche
     sistema.stampa_riepilogo()
 
+# main
 if __name__ == "__main__":
     test_modulo()
 
