@@ -38,7 +38,7 @@ class GestoreOrdini:
         # assicuriamoci che l'ordine da processare esista
         if not self._ordini_da_processare:
             print("Non vi sono ordini da processare")
-            return False #interrompo il metodo
+            return False, Ordine([], ClienteRecord("","","")) #interrompo il metodo
 
         # se esiste, gestiamo il primo in coda
         ordine = self._ordini_da_processare.popleft() #logica FIFO, processo il primo ordine
@@ -60,15 +60,22 @@ class GestoreOrdini:
 
         print("Ordine correttamante processato")
 
+        return True, ordine
+
 
     def processa_tutti_ordini(self):
         # processa tutti gli ordini attualmente presenti in coda
         print(f"Processando {len(self._ordini_da_processare)} ordini")
 
+        ordini = []
+
         # finchè la coda non è vuota processa ordini chiamando il metodo precedente
         while self._ordini_da_processare:
-            self.processa_prossimo_ordine()
+            _, ordine = self.processa_prossimo_ordine()
+            ordini.append(ordine) #aggiungo gli ordini processati a una lista
         print("Tutti gli ordini sono stati processati")
+        return ordini #ritorno la lista
+
 
     def get_statistiche_prodotti(self, top_n: int=5):
         # restituisce info sui prodotti più venduti
@@ -103,6 +110,22 @@ class GestoreOrdini:
         print(f"Fatturato per categoria: ") # stampa il fatturato per categoria
         for cat, fatturato in self.get_distribuzione_categorie():
             print(f"{cat}: {fatturato}")
+
+    def get_riepilogo(self):
+        # restituisce una stringa con le info di massima
+        sommario = ""
+        sommario += f"Ordini correttamente gestiti: {len(self._ordini_processati)}"
+        sommario += f"Ordini in coda: {len(self._ordini_da_processare)}"
+
+        sommario += "Prodotti più venduti: "
+        for prod, quantita in self.get_statistiche_prodotti():
+            sommario += f"{prod}: {quantita}"
+
+        sommario += f"Fatturato per categoria: "
+        for cat, fatturato in self.get_distribuzione_categorie():
+            sommario += f"{cat}: {fatturato}"
+
+        return sommario
 
 # serve per testare il sistema e vedere se tutti i metodi creati funzionano in una lista di ordini
 def test_modulo():

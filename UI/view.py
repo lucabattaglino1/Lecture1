@@ -12,6 +12,8 @@ class View:
         self.update_page()
 
     def carica_interfaccia(self):
+        #qui ci sono tutti gli oggetti grafici che andrò ad utilizzare
+
         #Prodotto
         self._txtInNomeP = ft.TextField(label = "Nome prodotto", width = 200)
         self._txtInPrezzo = ft.TextField(label = "Prezzo", width = 200)
@@ -26,7 +28,7 @@ class View:
         row2 = ft.Row(controls=[self._txtInNomeC, self._txtInMail, self._txtInCategoria],
                       alignment=ft.MainAxisAlignment.CENTER)
 
-        #Buttons
+        #Bottoni con azioni prese dal controller
         self._btnAdd = ft.ElevatedButton(text = "Aggiungi ordine", on_click = self._controller.add_ordine, width = 200)
         self._btnGestisciOrdine = ft.ElevatedButton(text = "Gestisci ordine", on_click = self._controller.gestisci_ordine, width = 200)
         self._btmGestisciAllOrdini = ft.ElevatedButton(text = "Gestisci tutti gli ordini", on_click = self._controller.gestisci_all_ordini, width = 200)
